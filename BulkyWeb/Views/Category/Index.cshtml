@@ -1,9 +1,9 @@
 ﻿@model List<Category>
 <div class="container">
-    <div class="row pt-4">
+    <div class="row pt-4 pb-3">
         <div class="col-6"><h2 class="text-primary"> Category List</h2></div>
         <div class="col-6 text-end">
-            <a class="btn btn-primary" asp-controller="Category" asp-action="Create">Create new category</a>
+            <a class="btn btn-primary" asp-controller="Category" asp-action="Create"><i class="bi bi-file-plus"></i>Create new category</a>
         </div>
     </div>
     <table class="table table-bordered table-striped">
@@ -15,7 +15,9 @@
                 <th>
                     Display Order
                 </th>
-                <th></th>
+                <th>
+                    
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +26,10 @@
                 <tr>
                     <td>@obj.Name</td>
                     <td>@obj.DisplayOrder</td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Category" asp-action="Edit" asp-route-id ="@obj.Id">Edit</a>
+                        <a class="btn btn-danger" asp-controller="Category" asp-action="Delete" asp-route-Id="@obj.Id">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>
