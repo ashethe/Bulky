@@ -1,4 +1,6 @@
-﻿using BulkyWeb.Data;
+﻿using Bulky.DataAccess.Repository.IRepository;
+using Bulky.DataAccess.Repository.Repository;
+using BulkyWeb.Data;
 using BulkyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,14 +8,14 @@ namespace BulkyWeb.Controllers
 {
     public class CategoryController : Controller
     {
-        ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        ICategoryRepository category;
+        public CategoryController(ICategoryRepository _category)
         {
-                _db = db;
+            category = _category;
         }
         public IActionResult Index()
         {
-            List<Category> categories = _db.categories.ToList();
+            List<Category> categories = category.GetAll().ToList();
 
             return View(categories);
         }
@@ -31,8 +33,8 @@ namespace BulkyWeb.Controllers
             }
             if (ModelState.IsValid) 
             {
-                var res = _db.categories.Add(obj);
-                _db.SaveChanges();
+                category.Add(obj);
+                category.Save();
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -44,7 +46,7 @@ namespace BulkyWeb.Controllers
             { 
                 return NotFound(); 
             } 
-            Category? categoryFind = _db.categories.Find(id);
+            Category? categoryFind = category.Get(u => u.Id == id);
             return View(categoryFind);
         }
 
@@ -57,8 +59,8 @@ namespace BulkyWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                var res = _db.categories.Update(obj);
-                _db.SaveChanges();
+                category.Update(obj);
+                category.Save();
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -70,11 +72,11 @@ namespace BulkyWeb.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFind = _db.categories.Find(id);
+            Category? categoryFind = category.Get(u => u.Id == id);
             if (categoryFind == null)
             { return NotFound(); }
-            var res = _db.categories.Remove(categoryFind);
-            _db.SaveChanges();
+            category.Remove(categoryFind);
+            category.Save();
             return RedirectToAction("Index", "Category");
         }
     }
