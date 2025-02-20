@@ -8,14 +8,15 @@ namespace BulkyWeb.Controllers
 {
     public class CategoryController : Controller
     {
-        ICategoryRepository category;
-        public CategoryController(ICategoryRepository _category)
+        //ICategoryRepository category;
+        IUnitOfWork UnitOfWork;
+        public CategoryController(IUnitOfWork _UnitOfWork)
         {
-            category = _category;
+            UnitOfWork = _UnitOfWork;
         }
         public IActionResult Index()
         {
-            List<Category> categories = category.GetAll().ToList();
+            List<Category> categories = UnitOfWork.Category.GetAll().ToList();
 
             return View(categories);
         }
@@ -33,8 +34,8 @@ namespace BulkyWeb.Controllers
             }
             if (ModelState.IsValid) 
             {
-                category.Add(obj);
-                category.Save();
+                UnitOfWork.Category.Add(obj);
+                UnitOfWork.Save();
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -46,7 +47,7 @@ namespace BulkyWeb.Controllers
             { 
                 return NotFound(); 
             } 
-            Category? categoryFind = category.Get(u => u.Id == id);
+            Category? categoryFind = UnitOfWork.Category.Get(u => u.Id == id);
             return View(categoryFind);
         }
 
@@ -59,8 +60,8 @@ namespace BulkyWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                category.Update(obj);
-                category.Save();
+                UnitOfWork.Category.Update(obj);
+                UnitOfWork.Save();
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -72,11 +73,11 @@ namespace BulkyWeb.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFind = category.Get(u => u.Id == id);
+            Category? categoryFind = UnitOfWork.Category.Get(u => u.Id == id);
             if (categoryFind == null)
             { return NotFound(); }
-            category.Remove(categoryFind);
-            category.Save();
+            UnitOfWork.Category.Remove(categoryFind);
+            UnitOfWork.Save();
             return RedirectToAction("Index", "Category");
         }
     }
