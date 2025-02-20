@@ -4,8 +4,9 @@ using BulkyWeb.Data;
 using BulkyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BulkyWeb.Controllers
+namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         //ICategoryRepository category;
@@ -32,7 +33,7 @@ namespace BulkyWeb.Controllers
             {
                 ModelState.AddModelError("Name", "Name and Display order cannot be same");
             }
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 UnitOfWork.Category.Add(obj);
                 UnitOfWork.Save();
@@ -44,9 +45,9 @@ namespace BulkyWeb.Controllers
         public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)
-            { 
-                return NotFound(); 
-            } 
+            {
+                return NotFound();
+            }
             Category? categoryFind = UnitOfWork.Category.Get(u => u.Id == id);
             return View(categoryFind);
         }
